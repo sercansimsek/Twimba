@@ -1,22 +1,16 @@
-import { tweetsData } from './data.js'
-const tweetInput = document.getElementById('tweet-input')
-const tweetBtn = document.getElementById('tweet-btn')
+import { tweetsData } from "./data.js";
+const tweetInput = document.getElementById("tweet-input");
+const tweetBtn = document.getElementById("tweet-btn");
 
-tweetBtn.addEventListener('click', function(){
-    console.log(tweetInput.value)
-})
+tweetBtn.addEventListener("click", function () {
+  console.log(tweetInput.value);
+});
 
-function getFeedHtml(){
-    let feedHtml = ``
-/*
-Challenge:
-1. Add data attributes to each of the  <i> tags. You can call
-   them 'reply', 'like', and 'retweet’.
-2. Each data attribute should hold the tweet's uuid.
-*/
-    
-    tweetsData.forEach(function(tweet){
-        feedHtml += `
+function getFeedHtml() {
+  let feedHtml = ``;
+
+  tweetsData.forEach(function (tweet) {
+    feedHtml += `
 <div class="tweet">
     <div class="tweet-inner">
         <img src="${tweet.profilePic}" class="profile-pic">
@@ -40,14 +34,13 @@ Challenge:
         </div>            
     </div>
 </div>
-`
-   })
-   return feedHtml 
+`;
+  });
+  return feedHtml;
 }
 
-function render(){
-    document.getElementById('feed').innerHTML = getFeedHtml()
+function render() {
+  document.getElementById("feed").innerHTML = getFeedHtml();
 }
 
-render()
-
+render();
