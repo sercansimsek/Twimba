@@ -1,16 +1,45 @@
-import { tweetsData } from "./data.js";
-const tweetInput = document.getElementById("tweet-input");
-const tweetBtn = document.getElementById("tweet-btn");
+import { tweetsData } from './data.js'
+const tweetInput = document.getElementById('tweet-input')
+const tweetBtn = document.getElementById('tweet-btn')
 
-tweetBtn.addEventListener("click", function () {
-  console.log(tweetInput.value);
-});
+tweetBtn.addEventListener('click', function(){
+    console.log(tweetInput.value)
+})
 
-function getFeedHtml() {
-  let feedHtml = ``;
+document.addEventListener('click', function(e){
+    if(e.target.dataset.like){
+       handleLikeClick(e.target.dataset.like) 
+    }
+})
 
-  tweetsData.forEach(function (tweet) {
-    feedHtml += `
+function handleLikeClick(tweetId){ 
+    const targetTweetObj = tweetsData.filter(function(tweet){
+        return tweet.uuid === tweetId
+    })[0]
+    
+/*
+Challenge:
+1. Delete the two lines of code marked below and
+   replace them with just one line of code outside 
+   of the if else.
+   Hint: Google the logical NOT operator (!)
+*/ 
+
+    if (targetTweetObj.isLiked){
+        targetTweetObj.likes--
+    }
+    else{
+        targetTweetObj.likes++ 
+    }
+    targetTweetObj.isLiked = !targetTweetObj.isLiked
+    render()
+}
+
+function getFeedHtml(){
+    let feedHtml = ``
+    
+    tweetsData.forEach(function(tweet){
+        feedHtml += `
 <div class="tweet">
     <div class="tweet-inner">
         <img src="${tweet.profilePic}" class="profile-pic">
@@ -19,28 +48,35 @@ function getFeedHtml() {
             <p class="tweet-text">${tweet.tweetText}</p>
             <div class="tweet-details">
                 <span class="tweet-detail">
-                    <i class="fa-regular fa-comment-dots"></i>
+                    <i class="fa-regular fa-comment-dots"
+                    data-reply="${tweet.uuid}"
+                    ></i>
                     ${tweet.replies.length}
                 </span>
                 <span class="tweet-detail">
-                    <i class="fa-solid fa-heart"></i>
+                    <i class="fa-solid fa-heart"
+                    data-like="${tweet.uuid}"
+                    ></i>
                     ${tweet.likes}
                 </span>
                 <span class="tweet-detail">
-                    <i class="fa-solid fa-retweet"></i>
+                    <i class="fa-solid fa-retweet"
+                    data-retweet="${tweet.uuid}"
+                    ></i>
                     ${tweet.retweets}
                 </span>
             </div>   
         </div>            
     </div>
 </div>
-`;
-  });
-  return feedHtml;
+`
+   })
+   return feedHtml 
 }
 
-function render() {
-  document.getElementById("feed").innerHTML = getFeedHtml();
+function render(){
+    document.getElementById('feed').innerHTML = getFeedHtml()
 }
 
-render();
+render()
+
