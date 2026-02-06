@@ -1,54 +1,77 @@
-import { tweetsData } from "./data.js";
-const tweetInput = document.getElementById("tweet-input");
-const tweetBtn = document.getElementById("tweet-btn");
+import { tweetsData } from './data.js'
+const tweetInput = document.getElementById('tweet-input')
+const tweetBtn = document.getElementById('tweet-btn')
 
-tweetBtn.addEventListener("click", function () {
-	console.log(tweetInput.value);
-});
+tweetBtn.addEventListener('click', function(){
+    console.log(tweetInput.value)
+})
 
-document.addEventListener("click", function (e) {
-	if (e.target.dataset.like) {
-		handleLikeClick(e.target.dataset.like);
-	}
+document.addEventListener('click', function(e){
+    if(e.target.dataset.like){
+       handleLikeClick(e.target.dataset.like) 
+    }
+    else if(e.target.dataset.retweet){
+        handleRetweetClick(e.target.dataset.retweet)
+    }
+})
 
-	if (e.target.dataset.retweet) {
-		handleRetweetClick(e.target.dataset.retweet);
-	}
-});
+function handleLikeClick(tweetId){ 
+    const targetTweetObj = tweetsData.filter(function(tweet){
+        return tweet.uuid === tweetId
+    })[0]
 
-function handleLikeClick(tweetId) {
-	const targetTweetObj = tweetsData.filter(function (tweet) {
-		return tweet.uuid === tweetId;
-	})[0];
-
-	if (targetTweetObj.isLiked) {
-		targetTweetObj.likes--;
-	} else {
-		targetTweetObj.likes++;
-	}
-	targetTweetObj.isLiked = !targetTweetObj.isLiked;
-	render();
+    if (targetTweetObj.isLiked){
+        targetTweetObj.likes--
+    }
+    else{
+        targetTweetObj.likes++ 
+    }
+    targetTweetObj.isLiked = !targetTweetObj.isLiked
+    render()
 }
 
-function handleRetweetClick(tweetId) {
-	const targetTweetObj = tweetsData.filter(function (tweet) {
-		return tweet.uuid === tweetId;
-	})[0];
-
-	if (targetTweetObj.isRetweeted) {
-		targetTweetObj.retweets--;
-	} else {
-		targetTweetObj.retweets++;
-	}
-	targetTweetObj.isRetweeted = !targetTweetObj.isRetweeted;
-	render();
+function handleRetweetClick(tweetId){
+    const targetTweetObj = tweetsData.filter(function(tweet){
+        return tweet.uuid === tweetId
+    })[0]
+    
+    if(targetTweetObj.isRetweeted){
+        targetTweetObj.retweets--
+    }
+    else{
+        targetTweetObj.retweets++
+    }
+    targetTweetObj.isRetweeted = !targetTweetObj.isRetweeted
+    render() 
 }
 
-function getFeedHtml() {
-	let feedHtml = ``;
-
-	tweetsData.forEach(function (tweet) {
-		feedHtml += `
+function getFeedHtml(){
+    let feedHtml = ``
+    
+    tweetsData.forEach(function(tweet){
+        
+        let likeIconClass = ''
+        
+        if (tweet.isLiked){
+            likeIconClass = 'liked'
+        }
+        
+        let retweetIconClass = ''
+        
+        if (tweet.isRetweeted){
+            retweetIconClass = 'retweeted'
+        }
+        
+/*
+Challenge:
+1. Use an if statement to set the value of 
+   'retweetIconClass' to the string 
+   'retweeted' if the tweet has been retweeted. 
+2. In the retweet icon tag, add 'retweetIconClass' 
+   to the list of classes.
+*/
+          
+        feedHtml += `
 <div class="tweet">
     <div class="tweet-inner">
         <img src="${tweet.profilePic}" class="profile-pic">
@@ -63,13 +86,13 @@ function getFeedHtml() {
                     ${tweet.replies.length}
                 </span>
                 <span class="tweet-detail">
-                    <i class="fa-solid fa-heart"
+                    <i class="fa-solid fa-heart ${likeIconClass}"
                     data-like="${tweet.uuid}"
                     ></i>
                     ${tweet.likes}
                 </span>
                 <span class="tweet-detail">
-                    <i class="fa-solid fa-retweet"
+                    <i class="fa-solid fa-retweet ${retweetIconClass}"
                     data-retweet="${tweet.uuid}"
                     ></i>
                     ${tweet.retweets}
@@ -78,13 +101,14 @@ function getFeedHtml() {
         </div>            
     </div>
 </div>
-`;
-	});
-	return feedHtml;
+`
+   })
+   return feedHtml 
 }
 
-function render() {
-	document.getElementById("feed").innerHTML = getFeedHtml();
+function render(){
+    document.getElementById('feed').innerHTML = getFeedHtml()
 }
 
-render();
+render()
+
